@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package chat.app.Server;
 
 import java.io.IOException;
@@ -12,15 +7,33 @@ import java.util.Scanner;
 
 public class ServerTask implements Runnable {
     
-    private Socket socket;
+    public Socket userSocket;
+    
+    public String userName;
 
-    ServerTask(Socket socket) {
-        this.socket = socket;
-    }
-
-    @Override
-    public void run() {
-            //TODO
+    ServerTask(Socket userSocket) {
+        this.userSocket = userSocket;
     }
     
+    @Override
+    public void run() {
+        System.out.println("Connected: " + userSocket);
+             try {
+                  var in = new Scanner(userSocket.getInputStream());
+                  
+                  var out = new PrintWriter(userSocket.getOutputStream(), true);
+                  
+                  while (in.hasNextLine()) {
+                    out.println(in.nextLine().toUpperCase());
+                  }
+         } catch (Exception e) {
+                  System.out.println("Error:" + userSocket); } 
+             
+             finally {
+             try {
+                    userSocket.close();
+                } catch (IOException e) { }
+                System.out.println("Closed: " + userSocket);
+         }         
+    }  
 }
