@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class ServerTask implements Runnable {
     
-    public Socket userSocket;
+    private Socket userSocket;
     
-    public String userName;
+    private String userName;
     
     ServerTask(Socket userSocket) {
         this.userSocket = userSocket;
@@ -26,13 +26,20 @@ public class ServerTask implements Runnable {
                   var out = new PrintWriter(userSocket.getOutputStream(), true);
 
                   while (in.hasNextLine()) {
-                    // if client's username didn't assing.
-                    if( userName ==  "" ) {
-                        // Sends client's input to set username
-                        SetUserName(in, out);
-                     }
-                    
-                     out.println(in.nextLine().toUpperCase());
+                        // if client's username didn't assing.
+                        if( userName ==  "" ) { // Username Assing Action
+                           // Sends client's input to set username
+                          out.println(SetUserName(in));
+                        }
+                        else if (in.nextLine().equals("1")){ // Message to single user Action
+                           out.println("Message to single user");
+                        }
+                        else if (in.nextLine().equals("2")){ // Message to a group Action
+                           out.println("Message to group");
+                        }
+                        else if (in.nextLine().equals("3")){ // Message to all user Action
+                           out.println("Message to all user");
+                        }
                   }
                   
          } catch (Exception e) {
@@ -47,8 +54,8 @@ public class ServerTask implements Runnable {
     }  
     
     // Sets Client's Username
-    private void SetUserName(Scanner in, PrintWriter out){
-            userName = in.nextLine();                          
-            out.println("Connected Server as " + userName);                         
+    private String SetUserName(Scanner in){
+            userName = in.nextLine();                                       
+            return "Connected Server as " + userName;
          }             
     } 

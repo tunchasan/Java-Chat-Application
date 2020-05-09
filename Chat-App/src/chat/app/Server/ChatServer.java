@@ -31,5 +31,20 @@ public class ChatServer {
                 pool.execute(task);
             }
         }
-    }       
+    }
+    
+    public static String SendMessageToPerson(String userName, String message){
+        
+        return "";
+    }
+    
+    public static String SendMessageToGroup(String groupName, String message){
+        
+        return "";
+    }
+    
+    public static String SendMessageToAll(String message){
+        
+        return "";
+    }
 }
