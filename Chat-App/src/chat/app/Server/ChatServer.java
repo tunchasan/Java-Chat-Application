@@ -11,13 +11,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
-/**
- *
- * @author ganov
- */
+
 public class ChatServer {
 
-    private static int SERVET_LIMIT = 20;
+    public static int SERVET_LIMIT = 20;
     
     private static int SERVER_PORT_NO = 4999;
     
@@ -28,9 +25,10 @@ public class ChatServer {
             System.out.println("The chat server is running...");
             
             var pool = Executors.newFixedThreadPool(SERVET_LIMIT);
-            
+
             while (true) {
-                pool.execute(new ServerTask(listener.accept()));
+                ServerTask task = new ServerTask(listener.accept()); 
+                pool.execute(task);
             }
         }
     }       

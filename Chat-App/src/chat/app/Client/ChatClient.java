@@ -18,9 +18,16 @@ public class ChatClient {
     
     public static void main(String[] args) throws Exception {
         
+        System.out.println( "Server Action List"
+                                 + "\n"
+                                 + "1- Send message to a user\n"
+                                 + "2- Send message to a group\n"
+                                 + "3- Send message to all user\n"
+                                 + "***************************");
+        
         try (var socket = new Socket("localhost", SERVER_PORT_NO)) {
             
-            System.out.println("Enter lines of text then Ctrl+D or Ctrl+C to quit");
+            System.out.println("Enter an user name:");
             
             var scanner = new Scanner(System.in);
             
