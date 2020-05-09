@@ -26,14 +26,13 @@ public class ServerTask implements Runnable {
                   var out = new PrintWriter(userSocket.getOutputStream(), true);
 
                   while (in.hasNextLine()) {
-                      
-                      // Username Assinging
-                      if (userName == "") {
-                          userName = in.nextLine();                          
-                          out.println("Connected Server as " + userName);                         
-                      }
-                      
-                    out.println(in.nextLine().toUpperCase());
+                    // if client's username didn't assing.
+                    if( userName ==  "" ) {
+                        // Sends client's input to set username
+                        SetUserName(in, out);
+                     }
+                    
+                     out.println(in.nextLine().toUpperCase());
                   }
                   
          } catch (Exception e) {
@@ -46,4 +45,10 @@ public class ServerTask implements Runnable {
                   System.out.println("Closed: " + userSocket);
          }         
     }  
-}   
+    
+    // Sets Client's Username
+    private void SetUserName(Scanner in, PrintWriter out){
+            userName = in.nextLine();                          
+            out.println("Connected Server as " + userName);                         
+         }             
+    } 
