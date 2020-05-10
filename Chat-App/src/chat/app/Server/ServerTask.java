@@ -40,8 +40,39 @@ public class ServerTask implements Runnable {
                         // if client's username didn't assing.
                         if (receiver.equals("/singleUser")){ // Message to single user Action
                            out.println("Type receiver's user name"); 
-                           //String result = ChatServer.SendMessageToPerson(receiver.substring(11), userName,);
-                           //out.println(result);
+                           while(true){
+                               receiver = in.nextLine();
+                               
+                               if(receiver.isBlank()){
+                                   out.println("User name can not be empty. Try again."); 
+                               }
+                               else{
+                                   if(ChatServer.GetNameList().contains(receiver)){
+                                      String receiverName = receiver;
+                                      
+                                      out.println(Messages.Results.Type_your_message.toString());
+                                      
+                                      while(true){
+                                          String message = in.nextLine();
+                                          
+                                          if(message.isBlank()){
+                                            out.println("User name can not be empty. Try again."); 
+                                          }
+                                          else{
+                                              //Request to server to send message
+                                              String result = ChatServer.SendMessageToPerson(message, receiverName, userName);
+                                              // Send request result message to client
+                                              out.println(result);
+                                              break;
+                                          }
+                                    }
+                                      break;
+                                      
+                                    } else{
+                                       out.println(Messages.Results.User_not_exist.toString() + " Try again."); 
+                                   }
+                               }
+                           }
                         }
                         else if (receiver.equals("/group")){ // Message to a group Action
                            out.println("Message to group");
@@ -50,7 +81,7 @@ public class ServerTask implements Runnable {
                            out.println("Creating group...");
                         }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
-                           out.println("Type your message that you want to send"); 
+                           out.println(Messages.Results.Type_your_message.toString());  
                            while(true){
                                // Get client request
                                receiver = in.nextLine();
