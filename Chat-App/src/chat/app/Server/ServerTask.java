@@ -26,18 +26,23 @@ public class ServerTask implements Runnable {
                   out = new PrintWriter(userSocket.getOutputStream(), true);
                   // Set client name as unique
                   SetUniqueUserName();
-                   
-                  while (in.hasNextLine()) {
+                  // Now successful name has been chosen , we can start core process to manage client requests.
+                  while (true) {
                         String receiver = in.nextLine();
+                        // Client connection to end, if write and send "/quit" to server
+                        if (receiver.toLowerCase().startsWith("/quit")) {
+                           return;
+                        }
                         // if client's username didn't assing.
-                        if (receiver.equals("1")){ // Message to single user Action
+                        if (receiver.equals("/singleUser")){ // Message to single user Action
                            out.println("Message to single user");
                         }
-                        else if (receiver.equals("2")){ // Message to a group Action
+                        else if (receiver.equals("/group")){ // Message to a group Action
                            out.println("Message to group");
                         }
-                        else if (receiver.equals("3")){ // Message to all user Action
-                           out.println("Message to all user");
+                        else if (receiver.startsWith("/allUser")){ // Message to all user Action
+                           ChatServer.SendMessageToAll(receiver.substring(8), userName, out);
+                           out.println("Message sended to all user");
                         }
                         else{
                            out.println("Wrong action!");
@@ -55,7 +60,7 @@ public class ServerTask implements Runnable {
          }         
     }  
     
-    // Sets Client's Username
+    // Sets Client's Unique Username
     private synchronized void SetUniqueUserName(){
         while(true) {
             String name = in.nextLine();
@@ -63,9 +68,15 @@ public class ServerTask implements Runnable {
                out.println("Username can not be empty");
             }
             else if (!(ChatServer.names.contains(name))){
+                // Add name to names list
                 ChatServer.names.add(name);
+                // Add socket's writer to writers set
+                ChatServer.writers.add(out);
+                // Assing unique name to userName
                 userName = name;
+                // Sends return message to client
                 out.println("Connected Server as " + userName);
+                //Then finalize the process
                 return;
             }
             else{
