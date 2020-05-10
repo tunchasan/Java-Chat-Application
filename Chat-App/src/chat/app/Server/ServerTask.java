@@ -9,7 +9,7 @@ public class ServerTask implements Runnable {
     
     private Socket userSocket; 
     private String userName;
-    private Scanner in; //receiver
+        private Scanner in; //receiver
     private PrintWriter out; //sender
     
     ServerTask(Socket userSocket) {
@@ -40,6 +40,9 @@ public class ServerTask implements Runnable {
                         else if (receiver.equals("/group")){ // Message to a group Action
                            out.println("Message to group");
                         }
+                        else if (receiver.equals("/createGroup")){ // Message to a group Action
+                           out.println("Creating group...");
+                        }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
                            ChatServer.SendMessageToAll(receiver.substring(8), userName, out);
                            out.println("Message sended to all user");
@@ -62,6 +65,7 @@ public class ServerTask implements Runnable {
     
     // Sets Client's Unique Username
     private synchronized void SetUniqueUserName(){
+        out.println("Enter an user name:");
         while(true) {
             String name = in.nextLine();
             if (name.isBlank()){
