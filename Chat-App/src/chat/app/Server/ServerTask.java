@@ -7,13 +7,13 @@ import java.util.Scanner;
 
 public class ServerTask implements Runnable {
     
-    private Socket userSocket;
-    
+    private Socket userSocket; 
     private String userName;
+    private Scanner in; //receiver
+    private PrintWriter out; //sender
     
     ServerTask(Socket userSocket) {
         this.userSocket = userSocket;
-        
         this.userName = "";
     }
     
@@ -21,9 +21,9 @@ public class ServerTask implements Runnable {
     public void run() {
          System.out.println("Connected: " + userSocket);
              try {
-                  var in = new Scanner(userSocket.getInputStream());
+                  in = new Scanner(userSocket.getInputStream());
                   
-                  var out = new PrintWriter(userSocket.getOutputStream(), true);
+                  out = new PrintWriter(userSocket.getOutputStream(), true);
 
                   while (in.hasNextLine()) {
                         String receiver = in.nextLine();
@@ -42,7 +42,7 @@ public class ServerTask implements Runnable {
                            out.println("Message to all user");
                         }
                         else{
-                            out.println("Wrong action!");
+                           out.println("Wrong action!");
                         }
                   }
                   

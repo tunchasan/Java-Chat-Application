@@ -9,14 +9,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class ChatServer {
-
-    public static int SERVET_LIMIT = 20;
     
+    // Server client capacity
+    public static int SERVET_LIMIT = 20;
+    // Server port number
     private static int SERVER_PORT_NO = 4999;
+    // All client names, so we can check for duplicates upon registration.
+    private static Set<String> names = new HashSet<>();
+    // The set of all the print writers for all the clients, used for broadcast.
+    private static Set<PrintWriter> writers = new HashSet<>();
     
     public static void main(String[] args) throws Exception{
         
