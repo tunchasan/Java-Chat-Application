@@ -3,14 +3,17 @@ package chat.app.Server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class ServerTask implements Runnable {
     
     private Socket userSocket; 
     private String userName;
-        private Scanner in; //receiver
+    private Scanner in; //receiver
     private PrintWriter out; //sender
+    private UserDataHandler userData;
     
     ServerTask(Socket userSocket) {
         this.userSocket = userSocket;
@@ -44,7 +47,7 @@ public class ServerTask implements Runnable {
                            out.println("Creating group...");
                         }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
-                           ChatServer.SendMessageToAll(receiver.substring(8), userName, out);
+                           ChatServer.SendMessageToAll(receiver.substring(8), userName);
                            out.println("Message sended to all user");
                         }
                         else{
@@ -65,17 +68,19 @@ public class ServerTask implements Runnable {
     
     // Sets Client's Unique Username
     private synchronized void SetUniqueUserName(){
-        out.println("Enter an user name:");
+        out.println("Enter a user name:");
         while(true) {
             String name = in.nextLine();
             if (name.isBlank()){
                out.println("Username can not be empty");
             }
-            else if (!(ChatServer.names.contains(name))){
-                // Add name to names list
-                ChatServer.names.add(name);
-                // Add socket's writer to writers set
-                ChatServer.writers.add(out);
+            else if (!(ChatServer.GetNameList().contains(name))){
+                // Add name to names list in server
+                ChatServer.GetNameList().add(name);
+                //Create new data object to store user information
+                userData = new UserDataHandler(name, out);
+                //Add data to list
+                ChatServer.GetUserList().add(userData);
                 // Assing unique name to userName
                 userName = name;
                 // Sends return message to client
@@ -86,6 +91,6 @@ public class ServerTask implements Runnable {
             else{
                 out.println("The username is already using by another user");
             }
-         }             
+        }             
     } 
 }
