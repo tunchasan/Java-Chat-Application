@@ -22,7 +22,7 @@ public class ChatClientReadHandler implements Runnable {
         String serverResponse = null;
         while (true){
                 serverResponse = in.nextLine();
-                System.out.println(serverResponse);
+                System.out.println(" > " + serverResponse);
         }
     }
 }
