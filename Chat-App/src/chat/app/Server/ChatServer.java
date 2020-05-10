@@ -5,6 +5,7 @@
  */
 package chat.app.Server;
 
+import chat.app.DB.UserDataHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -55,20 +56,27 @@ public class ChatServer {
         }
     }
     
-    public static void SendMessageToPerson(String userName, String message){
+    public static String SendMessageToPerson(String message, String userName, String senderName){
+        for (int i = 0; i < userList.size(); i ++) {
+            if (userList.get(i).GetName() == userName){
+               userList.get(i).GetWriter().println(senderName + ": " + message);
+               return Messages.Results.Message_successfully_sended + " to " + userName;
+            }
+        }
+        return Messages.Results.User_not_exist.toString();
+    }
+    
+    public static void SendMessageToGroup(String message, String groupName){
         
     }
     
-    public static void SendMessageToGroup(String groupName, String message){
-        
-    }
-    
-    public static void SendMessageToAll(String message, String senderName){
+    public static String SendMessageToAll(String message, String senderName){
          for (int i = 0; i < userList.size(); i ++) {
             if (userList.get(i).GetName() == senderName){
                continue; 
             }
             userList.get(i).GetWriter().println(senderName + ": " + message);
          }
+         return Messages.Results.Message_successfully_sended.toString();
     }
 }
