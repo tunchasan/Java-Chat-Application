@@ -26,20 +26,20 @@ public class ChatClient {
                                  + "********************************************************************************************");
         
          try (var socket = new Socket("localhost", SERVER_PORT_NO)) {
+             
+            ChatClientReadHandler conn = new ChatClientReadHandler(socket);
+            
+            new Thread(conn).start();
             
             System.out.println("Enter an user name:");
             
             var scanner = new Scanner(System.in);
             
-            var in = new Scanner(socket.getInputStream());
-            
             var out = new PrintWriter(socket.getOutputStream(), true);
             
-            while (scanner.hasNextLine()) {
+            while (true) {
                 
                 out.println(scanner.nextLine());
-                
-                System.out.println(in.nextLine());
             }
         }
     }   
