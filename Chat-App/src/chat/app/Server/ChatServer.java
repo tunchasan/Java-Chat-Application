@@ -17,13 +17,13 @@ import java.util.concurrent.Executors;
 public class ChatServer {
     
     // Server client capacity
-    public static int SERVET_LIMIT = 20;
+    private static int SERVET_LIMIT = 20;
     // Server port number
     private static int SERVER_PORT_NO = 4999;
     // All client names, so we can check for duplicates upon registration.
-    private static Set<String> names = new HashSet<>();
+    public static Set<String> names = new HashSet<>();
     // The set of all the print writers for all the clients, used for broadcast.
-    private static Set<PrintWriter> writers = new HashSet<>();
+    public static Set<PrintWriter> writers = new HashSet<>();
     
     public static void main(String[] args) throws Exception{
         
