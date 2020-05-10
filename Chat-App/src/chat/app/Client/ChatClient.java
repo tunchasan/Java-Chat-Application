@@ -18,27 +18,26 @@ public class ChatClient {
     
     public static void main(String[] args) throws Exception {
         
-        System.out.println( "Server Command List\n"
-                                 + "/singleUser + {Username} + {Message}  ---> Send message to a user\n"
-                                 + "/group + {Message} ----------------------> Send message to a group\n"
-                                 + "/allUser + {Message} --------------------> Send message to all user\n"
-                                 + "/quit -----------------------------------> Close the connection to the server\n"
-                                 + "********************************************************************************************");
+         System.out.println( "*******************************Server Command List******************************\n"
+                                 + "/createGroup + {User1}, {User2}, {User3} ---> Create Group\n"
+                                 + "/singleUser + {Username} + {Message}  ------> Send message to a user\n"
+                                 + "/group + {GroupName} + {Message} -----------> Send message to a group\n"
+                                 + "/allUser + {Message} -----------------------> Send message to all user\n"
+                                 + "/quit --------------------------------------> Close the connection to the server\n"
+                                 + "********************************************************************************");
         
          try (var socket = new Socket("localhost", SERVER_PORT_NO)) {
-             
+            
+             // Created an object for handling client read actions in thread
             ChatClientReadHandler conn = new ChatClientReadHandler(socket);
-            
+            // Start the thread
             new Thread(conn).start();
-            
-            System.out.println("Enter an user name:");
             
             var scanner = new Scanner(System.in);
             
             var out = new PrintWriter(socket.getOutputStream(), true);
             
             while (true) {
-                
                 out.println(scanner.nextLine());
             }
         }
