@@ -1,5 +1,6 @@
 package chat.app.Server;
 
+import chat.app.DB.UserDataHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -38,7 +39,9 @@ public class ServerTask implements Runnable {
                         }
                         // if client's username didn't assing.
                         if (receiver.equals("/singleUser")){ // Message to single user Action
-                           out.println("Message to single user");
+                           out.println("Type receiver's user name"); 
+                           //String result = ChatServer.SendMessageToPerson(receiver.substring(11), userName,);
+                           //out.println(result);
                         }
                         else if (receiver.equals("/group")){ // Message to a group Action
                            out.println("Message to group");
@@ -47,8 +50,21 @@ public class ServerTask implements Runnable {
                            out.println("Creating group...");
                         }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
-                           ChatServer.SendMessageToAll(receiver.substring(8), userName);
-                           out.println("Message sended to all user");
+                           out.println("Type your message that you want to send"); 
+                           while(true){
+                               // Get client request
+                               receiver = in.nextLine();
+                               
+                               if(receiver.isBlank()){
+                                   out.println("Message can not be empty. Try again."); 
+                               } 
+                               else{
+                                   break;
+                               }
+                           }
+                           String result = ChatServer.SendMessageToAll(receiver, userName);
+                           
+                           out.println(result);
                         }
                         else{
                            out.println("Wrong action!");
