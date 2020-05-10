@@ -26,19 +26,23 @@ public class ServerTask implements Runnable {
                   var out = new PrintWriter(userSocket.getOutputStream(), true);
 
                   while (in.hasNextLine()) {
+                        String receiver = in.nextLine();
                         // if client's username didn't assing.
-                        if( userName ==  "" ) { // Username Assing Action
+                        if (userName.equals("")) { // Username Assing Action
                            // Sends client's input to set username
-                          out.println(SetUserName(in));
+                          out.println(SetUserName(receiver));
                         }
-                        else if (in.nextLine().equals("1")){ // Message to single user Action
+                        else if (receiver.equals("1")){ // Message to single user Action
                            out.println("Message to single user");
                         }
-                        else if (in.nextLine().equals("2")){ // Message to a group Action
+                        else if (receiver.equals("2")){ // Message to a group Action
                            out.println("Message to group");
                         }
-                        else if (in.nextLine().equals("3")){ // Message to all user Action
+                        else if (receiver.equals("3")){ // Message to all user Action
                            out.println("Message to all user");
+                        }
+                        else{
+                            out.println("Wrong action!");
                         }
                   }
                   
@@ -54,8 +58,8 @@ public class ServerTask implements Runnable {
     }  
     
     // Sets Client's Username
-    private String SetUserName(Scanner in){
-            userName = in.nextLine();                                       
+    private String SetUserName(String name){
+            userName = name;       
             return "Connected Server as " + userName;
          }             
     } 
