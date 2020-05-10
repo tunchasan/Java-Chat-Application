@@ -24,15 +24,13 @@ public class ServerTask implements Runnable {
                   in = new Scanner(userSocket.getInputStream());
                   
                   out = new PrintWriter(userSocket.getOutputStream(), true);
-
+                  // Set client name as unique
+                  SetUniqueUserName();
+                   
                   while (in.hasNextLine()) {
                         String receiver = in.nextLine();
                         // if client's username didn't assing.
-                        if (userName.equals("")) { // Username Assing Action
-                           // Sends client's input to set username
-                          out.println(SetUserName(receiver));
-                        }
-                        else if (receiver.equals("1")){ // Message to single user Action
+                        if (receiver.equals("1")){ // Message to single user Action
                            out.println("Message to single user");
                         }
                         else if (receiver.equals("2")){ // Message to a group Action
@@ -58,8 +56,21 @@ public class ServerTask implements Runnable {
     }  
     
     // Sets Client's Username
-    private String SetUserName(String name){
-            userName = name;       
-            return "Connected Server as " + userName;
+    private synchronized void SetUniqueUserName(){
+        while(true) {
+            String name = in.nextLine();
+            if (name.isBlank()){
+               out.println("Username can not be empty");
+            }
+            else if (!(ChatServer.names.contains(name))){
+                ChatServer.names.add(name);
+                userName = name;
+                out.println("Connected Server as " + userName);
+                return;
+            }
+            else{
+                out.println("The username is already using by another user");
+            }
          }             
     } 
+}
