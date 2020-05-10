@@ -1,5 +1,6 @@
-package chat.app.Server;
+package chat.app.DB;
 
+import chat.app.Server.ChatGroup;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
