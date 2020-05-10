@@ -58,12 +58,13 @@ public class ChatServer {
     
     public static String SendMessageToPerson(String message, String userName, String senderName){
         for (int i = 0; i < userList.size(); i ++) {
-            if (userList.get(i).GetName() == userName){
+            if (userList.get(i).GetName().equals(userName)){
                userList.get(i).GetWriter().println(senderName + ": " + message);
-               return Messages.Results.Message_successfully_sended + " to " + userName;
+               System.out.println((userList.get(i).GetName()));
+               break;
             }
         }
-        return Messages.Results.User_not_exist.toString();
+        return Messages.Results.Message_successfully_sended + " to " + userName;
     }
     
     public static void SendMessageToGroup(String message, String groupName){
@@ -72,7 +73,7 @@ public class ChatServer {
     
     public static String SendMessageToAll(String message, String senderName){
          for (int i = 0; i < userList.size(); i ++) {
-            if (userList.get(i).GetName() == senderName){
+            if (userList.get(i).GetName().equals(senderName) ){
                continue; 
             }
             userList.get(i).GetWriter().println(senderName + ": " + message);
