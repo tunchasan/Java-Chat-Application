@@ -40,18 +40,20 @@ public class ChatServer {
         }
     }
     
-    public static String SendMessageToPerson(String userName, String message){
-        
-        return "";
+    public static void SendMessageToPerson(String userName, String message){
+
     }
     
-    public static String SendMessageToGroup(String groupName, String message){
-        
-        return "";
+    public static void SendMessageToGroup(String groupName, String message){
+
     }
     
-    public static String SendMessageToAll(String message){
-        
-        return "";
+    public static void SendMessageToAll(String message, String senderName, PrintWriter senderWriter){
+        for (PrintWriter writer : writers) {
+            if (writer == senderWriter){
+               continue; 
+            }
+            writer.println(senderName + ": " + message);
+         }
     }
 }
