@@ -2,31 +2,37 @@
 package chat.app.Server;
 
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatGroup {
     // The user' group print writers set for the client, used for sending message user' group
-    private Set<PrintWriter> groupWriters;
+    private List<PrintWriter> groupWriters;
     // The user' group name
     private String groupName;
     
-    public String CreateGroup(String groupName){
-        
+    public ChatGroup (){
+        this.groupName = "";
+        this.groupWriters = new ArrayList<PrintWriter>();
+    }
+    
+    public void CreateGroup(String groupName){
         this.groupName = groupName;
-        
-        this.groupWriters = new HashSet<PrintWriter>();
-        // Return result message to server
-        return groupName + " has been created by";
     }
     
-    public String AddUserToGroup(){
-        
-        return "";
+    public void AddUserToGroup(PrintWriter writer){
+        groupWriters.add(writer);
     }
     
-    public String SendMessageToGroup(){
-        
-        return "";
+    public void SendMessageToGroup(String message, String userName){
+        ChatServer.SendMessageToGroup(message,groupWriters, userName);
+    }
+    
+    public String GetGroupName(){
+        return groupName;
+    }
+    
+    public int GetGroupSize(){
+        return groupWriters.size();
     }
 }
