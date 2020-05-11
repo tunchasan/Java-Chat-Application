@@ -6,15 +6,10 @@
 package chat.app.Server;
 
 import chat.app.DB.UserDataHandler;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
 import java.util.concurrent.Executors;
 
 public class ChatServer {
@@ -57,7 +52,7 @@ public class ChatServer {
     }
     
     public static String SendMessageToPerson(String message, String userName, String senderName){
-        for (int i = 0; i < userList.size(); i ++) {
+         for (int i = 0; i < userList.size(); i ++) {
             if (userList.get(i).GetName().equals(userName)){
                userList.get(i).GetWriter().println(senderName + ": " + message);
                System.out.println((userList.get(i).GetName()));
@@ -67,8 +62,10 @@ public class ChatServer {
         return Messages.Results.Message_successfully_sended + " to " + userName;
     }
     
-    public static void SendMessageToGroup(String message, String groupName){
-        
+    public static void SendMessageToGroup(String message, List<PrintWriter> groupWriter, String senderName){
+        for(PrintWriter writer:groupWriter){
+            writer.println(senderName + ": " + message);
+        }
     }
     
     public static String SendMessageToAll(String message, String senderName){
