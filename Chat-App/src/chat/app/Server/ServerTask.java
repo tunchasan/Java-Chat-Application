@@ -47,7 +47,7 @@ public class ServerTask implements Runnable {
                                    out.println("User name can not be empty. Try again."); 
                                }
                                else{
-                                   if(ChatServer.GetNameList().contains(receiver)){
+                                   if (ChatServer.GetNameList().contains(receiver)){
                                       String receiverName = receiver;
                                       
                                       out.println(Messages.Results.Type_your_message.toString());
@@ -75,10 +75,78 @@ public class ServerTask implements Runnable {
                            }
                         }
                         else if (receiver.equals("/group")){ // Message to a group Action
-                           out.println("Message to group");
+                           if (userData.GetGroup().GetGroupSize() == 0){
+                                out.println("Create a group for sending message to group");
+                           }
+                           else{
+                               out.println(Messages.Results.Type_your_message.toString());
+                               while (true) {
+                                  // Get client request
+                                    receiver = in.nextLine();
+
+                                    if (receiver.isBlank()){
+                                        out.println("Message can not be empty. Try again"); 
+                                    }  
+                                    else{
+                                        userData.GetGroup().SendMessageToGroup(receiver, userName);
+                                        out.println("Message sended successfuly."); 
+                                        break;
+                                    }
+                               }
+                           }
                         }
                         else if (receiver.equals("/createGroup")){ // Message to a group Action
-                           out.println("Creating group...");
+                           
+                           if (userData.GetGroup().GetGroupSize() == 0){
+                               out.println("Type group name.");
+                               while(true){
+                                    // Get client request
+                                    receiver = in.nextLine();
+
+                                    if (receiver.isBlank()){
+                                        out.println("Group name can not be empty. Try again."); 
+                                    } 
+                                    else{
+                                        // User group initializition
+                                        userData.GetGroup().CreateGroup(receiver);
+                                        
+                                        out.println("Add group to member. Type user names. To complete, write /done."); 
+                                        while (true){
+                                             receiver = in.nextLine();
+                                             if (receiver.startsWith("/done")){
+                                                 if (userData.GetGroup().GetGroupSize() > 0) {
+                                                      userData.GetGroup().AddUserToGroup(out);
+                                                      out.println("Group created succesfully."); 
+                                                      break;
+                                                 }
+                                                 else{
+                                                      out.println("To done, at least you need to add a user."); 
+                                                 }
+                                             }
+                                             
+                                             if (receiver.isBlank()){
+                                                 out.println("User name can not be empty. Try again."); 
+                                             }
+                                             else if (ChatServer.GetNameList().contains(receiver)) {
+                                                 for(UserDataHandler data:ChatServer.GetUserList()){
+                                                     if (data.GetName().equals(receiver)){
+                                                         userData.GetGroup().AddUserToGroup(data.GetWriter());
+                                                         out.println(receiver + " added to group"); 
+                                                         break;
+                                                     }
+                                                 }
+                                             }
+                                             else{
+                                                 out.println("User does not exist. Try again."); 
+                                             }
+                                         }
+                                        break;
+                                    } 
+                                }
+                           }
+                           else{
+                               out.println("You are already a member of a group.."); 
+                           }
                         }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
                            out.println(Messages.Results.Type_your_message.toString());  
