@@ -9,12 +9,10 @@ public class ChatClientReadHandler implements Runnable {
     
     private Socket socket;
     private Scanner in;
-    private PrintWriter out;
             
     public ChatClientReadHandler(Socket socket) throws IOException{
         this.socket = socket;
         in = new Scanner(this.socket.getInputStream());
-        out = new PrintWriter(this.socket.getOutputStream(), true);
     }
     
     @Override
