@@ -116,6 +116,15 @@ public class ServerTask implements Runnable {
                                              if (receiver.startsWith("/done")){
                                                  if (userData.GetGroup().GetGroupSize() > 0) {
                                                       userData.GetGroup().AddUserToGroup(out);
+                                                      // Update group information for other members
+                                                      for (UserDataHandler data:ChatServer.GetUserList()){
+                                                          if (userData.GetGroup().GetGroupList().contains(data.GetWriter())){
+                                                               // Update group member group data
+                                                               data.GetGroup().SettGroupName(userData.GetGroup().GetGroupName());
+                                                               
+                                                               data.GetGroup().SetGroupList(userData.GetGroup().GetGroupList());
+                                                          }
+                                                      }
                                                       out.println("Group created succesfully."); 
                                                       break;
                                                  }
