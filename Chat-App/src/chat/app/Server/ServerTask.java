@@ -4,9 +4,7 @@ import chat.app.DB.UserDataHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class ServerTask implements Runnable {
     
@@ -175,11 +173,11 @@ public class ServerTask implements Runnable {
                            out.println(result);
                         }
                         else{
-                           out.println("Wrong action!");
+                           out.println("Wrong command. Try again!");
                         }
                   }
                   
-         } catch (Exception e) {
+         } catch (IOException e) {
                   System.out.println("Error:" + userSocket); } 
                   
              finally {
