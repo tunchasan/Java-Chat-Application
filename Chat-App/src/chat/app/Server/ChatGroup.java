@@ -32,7 +32,19 @@ public class ChatGroup {
         return groupName;
     }
     
+   public void SettGroupName(String name){
+        groupName = name;     
+    }
+    
     public int GetGroupSize(){
         return groupWriters.size();
+    }
+    
+    public List<PrintWriter> GetGroupList(){
+        return groupWriters;
+    }
+    
+    public void SetGroupList(List<PrintWriter> list){
+        groupWriters = list;    
     }
 }
