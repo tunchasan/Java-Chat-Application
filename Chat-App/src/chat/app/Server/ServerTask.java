@@ -1,6 +1,7 @@
 package chat.app.Server;
 
 import chat.app.DB.UserDataHandler;
+import static chat.app.Server.ChatServer.ServerResponseFormatter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -21,7 +22,7 @@ public class ServerTask implements Runnable {
     
     @Override
     public void run() {
-         System.out.println("Connected: " + userSocket);
+         System.out.println(ChatServer.ServerResponseFormatter("Connected: " + userSocket));
              try {
                   in = new Scanner(userSocket.getInputStream());
                   
@@ -37,57 +38,57 @@ public class ServerTask implements Runnable {
                         }
                         // if client's username didn't assing.
                         if (receiver.equals("/singleUser")){ // Message to single user Action
-                           out.println("Type receiver's user name"); 
+                           out.println(ChatServer.ServerResponseFormatter("Type receiver's user name")); 
                            while(true){
                                receiver = in.nextLine();
                                
                                if(receiver.isBlank()){
-                                   out.println("User name can not be empty. Try again."); 
+                                   out.println(ChatServer.ServerResponseFormatter("User name can not be empty. Try again.")); 
                                }
                                else{
                                    if (ChatServer.GetNameList().contains(receiver)){
                                       String receiverName = receiver;
                                       
-                                      out.println("Type your message");
+                                      out.println(ChatServer.ServerResponseFormatter("Type your message"));
                                       
                                       while(true){
                                           String message = in.nextLine();
                                           
                                           if(message.isBlank()){
-                                            out.println("User name can not be empty. Try again."); 
+                                            out.println(ChatServer.ServerResponseFormatter("User name can not be empty. Try again.")); 
                                           }
                                           else{
                                               //Request to server to send message
-                                              String result = ChatServer.SendMessageToPerson(message, receiverName, userName);
+                                              ChatServer.SendMesssageToPerson(message, receiverName, userName);
                                               // Send request result message to client
-                                              out.println(result);
+                                              out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
                                               break;
                                           }
                                     }
                                       break;
                                       
                                     } else{
-                                       out.println("User not exist. Try again."); 
+                                       out.println(ChatServer.ServerResponseFormatter("User not exist. Try again.")); 
                                    }
                                }
                            }
                         }
                         else if (receiver.equals("/group")){ // Message to a group Action
                            if (userData.GetGroup().GetGroupSize() == 0){
-                                out.println("Create a group for sending message to group");
+                                out.println(ChatServer.ServerResponseFormatter("Create a group for sending message to group"));
                            }
                            else{
-                               out.println("Type your message");
+                               out.println(ChatServer.ServerResponseFormatter("Type your message"));
                                while (true) {
                                   // Get client request
                                     receiver = in.nextLine();
 
                                     if (receiver.isBlank()){
-                                        out.println("Message can not be empty. Try again"); 
+                                        out.println(ChatServer.ServerResponseFormatter("Message can not be empty. Try again")); 
                                     }  
                                     else{
                                         userData.GetGroup().SendMessageToGroup(receiver, userName);
-                                        out.println("Message sended successfuly."); 
+                                        out.println(ChatServer.ServerResponseFormatter("Message sended successfuly.")); 
                                         break;
                                     }
                                }
@@ -96,19 +97,19 @@ public class ServerTask implements Runnable {
                         else if (receiver.equals("/createGroup")){ // Message to a group Action
                            
                            if (userData.GetGroup().GetGroupSize() == 0){
-                               out.println("Type group name.");
+                               out.println(ChatServer.ServerResponseFormatter("Type group name."));
                                while(true){
                                     // Get client request
                                     receiver = in.nextLine();
 
                                     if (receiver.isBlank()){
-                                        out.println("Group name can not be empty. Try again."); 
+                                        out.println(ChatServer.ServerResponseFormatter("Group name can not be empty. Try again.")); 
                                     } 
                                     else{
                                         // User group initializition
                                         userData.GetGroup().CreateGroup(receiver);
                                         
-                                        out.println("Add group to member. Type user names. To complete, write /done."); 
+                                       out.println(ChatServer.ServerResponseFormatter("Add group to member. Type user names. To complete, write /done.")); 
                                         while (true){
                                              receiver = in.nextLine();
                                              if (receiver.startsWith("/done")){
@@ -118,21 +119,21 @@ public class ServerTask implements Runnable {
                                                       for (UserDataHandler data:ChatServer.GetUserList()){
                                                           if (userData.GetGroup().GetGroupList().contains(data.GetWriter())){
                                                                // Update group member group data
-                                                               data.GetGroup().SettGroupName(userData.GetGroup().GetGroupName());
+                                                               data.GetGroup().SetGroupName(userData.GetGroup().GetGroupName());
                                                                
                                                                data.GetGroup().SetGroupList(userData.GetGroup().GetGroupList());
                                                           }
                                                       }
-                                                      out.println("Group created succesfully."); 
+                                                      out.println(ChatServer.ServerResponseFormatter("Group created succesfully.")); 
                                                       break;
                                                  }
                                                  else{
-                                                      out.println("To done, at least you need to add a user."); 
+                                                      out.println(ChatServer.ServerResponseFormatter("To done, at least you need to add a user.")); 
                                                  }
                                              }
                                              
                                              if (receiver.isBlank()){
-                                                 out.println("User name can not be empty. Try again."); 
+                                                 out.println(ChatServer.ServerResponseFormatter("User name can not be empty. Try again.")); 
                                              }
                                              else if (ChatServer.GetNameList().contains(receiver)) {
                                                  for(UserDataHandler data:ChatServer.GetUserList()){
@@ -144,7 +145,7 @@ public class ServerTask implements Runnable {
                                                  }
                                              }
                                              else{
-                                                 out.println("User does not exist. Try again."); 
+                                                 out.println(ChatServer.ServerResponseFormatter("User does not exist. Try again.")); 
                                              }
                                          }
                                         break;
@@ -152,28 +153,26 @@ public class ServerTask implements Runnable {
                                 }
                            }
                            else{
-                               out.println("You are already a member of a group.."); 
+                               out.println(ChatServer.ServerResponseFormatter("You are already a member of a group..")); 
                            }
                         }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
-                           out.println("Type your message");  
+                           out.println(ChatServer.ServerResponseFormatter("Type your message"));  
                            while(true){
                                // Get client request
                                receiver = in.nextLine();
                                
                                if(receiver.isBlank()){
-                                   out.println("Message can not be empty. Try again."); 
+                                    out.println(ChatServer.ServerResponseFormatter("Message can not be empty. Try again."));
                                } 
                                else{
                                    break;
                                }
                            }
-                           String result = ChatServer.SendMessageToAll(receiver, userName);
-                           
-                           out.println(result);
+                           out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
                         }
                         else{
-                           out.println("Wrong command. Try again!");
+                           out.println(ChatServer.ServerResponseFormatter("Wrong command. Try again!"));
                         }
                   }
                   
@@ -190,11 +189,11 @@ public class ServerTask implements Runnable {
     
     // Sets Client's Unique Username
     private synchronized void SetUniqueUserName(){
-        out.println("Enter a user name:");
+        out.println(ChatServer.ServerResponseFormatter("Type a username"));
         while(true) {
             String name = in.nextLine();
             if (name.isBlank()){
-               out.println("Username can not be empty");
+               out.println(ChatServer.ServerResponseFormatter("Username can not be empty"));
             }
             else if (!(ChatServer.GetNameList().contains(name))){
                 // Add name to names list in server
@@ -206,12 +205,12 @@ public class ServerTask implements Runnable {
                 // Assing unique name to userName
                 userName = name;
                 // Sends return message to client
-                out.println("Connected Server as " + userName);
+                out.println(ChatServer.ServerResponseFormatter("Connected Server as " + userName));
                 //Then finalize the process
                 return;
             }
             else{
-                out.println("The username is already using by another user");
+                out.println(ChatServer.ServerResponseFormatter("The username is already using by another user"));
             }
         }             
     } 

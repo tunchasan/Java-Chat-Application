@@ -8,9 +8,11 @@ package chat.app.Server;
 import chat.app.DB.UserDataHandler;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.time.LocalDateTime;
 
 public class ChatServer {
     // Server client capacity
@@ -36,7 +38,7 @@ public class ChatServer {
         
         try (var listener = new ServerSocket(SERVER_PORT_NO)) {
             // Server starts message
-            System.out.println("The chat server is running..");
+            System.out.println(ServerResponseFormatter("The chat server is running.."));
             // Initialize the user data list
             userList = new ArrayList<UserDataHandler>();
             // Initialize name list
@@ -51,30 +53,39 @@ public class ChatServer {
         }
     }
     
-    public static String SendMessageToPerson(String message, String userName, String senderName){
+    public static void SendMesssageToPerson(String message, String userName, String senderName){
          for (int i = 0; i < userList.size(); i ++) {
             if (userList.get(i).GetName().equals(userName)){
-               userList.get(i).GetWriter().println(senderName + ": " + message);
-               System.out.println((userList.get(i).GetName()));
+               userList.get(i).GetWriter().println(ClientMessageFormatter(message, senderName));
                break;
             }
         }
-        return "Message successfuly sended to " + userName;
     }
     
-    public static void SendMessageToGroup(String message, List<PrintWriter> groupWriter, String senderName){
+    public static void SendMessageToGroup(String message, List<PrintWriter> groupWriter, String senderName, String groupName){
         for(PrintWriter writer:groupWriter){
-            writer.println(senderName + ": " + message);
+            writer.println(ClientMessageFormatter(message, "(Group " + groupName + ") "+ senderName));
         }
     }
     
-    public static String SendMessageToAll(String message, String senderName){
+    public static void SendMessageToAll(String message, String senderName){
          for (int i = 0; i < userList.size(); i ++) {
             if (userList.get(i).GetName().equals(senderName) ){
                continue; 
             }
             userList.get(i).GetWriter().println(senderName + ": " + message);
          }
-         return "Message successfuly sended.";
+    }
+    
+    public static String GetServerTime(){
+        return LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
+    }
+    
+    public static String ServerResponseFormatter(String message){
+        return " [" + ChatServer.GetServerTime() + " Server]  " + message;
+    }
+    
+    public static String ClientMessageFormatter(String message, String senderName) {
+        return " [" + ChatServer.GetServerTime() + " " + senderName + "] " +  message;
     }
 }

@@ -24,8 +24,8 @@ public class ChatClientReadHandler implements Runnable {
             try{
                 while (true){
                     serverResponse = in.nextLine();
-                    chatUI.AddMessageToUI(" > " + serverResponse);
-                    System.out.println(" > " + serverResponse);
+                    chatUI.AddMessageToUI(serverResponse);
+                    System.out.println(serverResponse);
             }
         } catch (NoSuchElementException e) { }
             finally {
