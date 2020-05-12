@@ -1,6 +1,7 @@
 package chat.app.Client;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import javax.swing.JFrame;
@@ -13,12 +14,14 @@ public class ChatUI {
     private JFrame frame;
     private JTextField textField;
     private JTextArea messageArea;
+    private Font font;
     private PrintWriter out;
     
     public ChatUI(PrintWriter writer){
         frame = new JFrame("JavaChats");
         textField = new JTextField(50);
         messageArea = new JTextArea(16, 50);
+        font = new Font("Merriweather", Font.PLAIN,12);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         this.out = writer;
@@ -31,11 +34,12 @@ public class ChatUI {
 
     public void ConfigureUI(){
         textField.setEditable(true);
+        textField.setFont(font);
         messageArea.setEditable(false);
         frame.getContentPane().add(textField, BorderLayout.SOUTH);
         frame.getContentPane().add(new JScrollPane(messageArea), BorderLayout.CENTER);
         frame.pack();
-        
+        messageArea.setFont(font);
         // Send on enter then clear to prepare for next message
         textField.addActionListener((ActionEvent e) -> {
             out.println(textField.getText());
