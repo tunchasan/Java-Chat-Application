@@ -13,7 +13,6 @@ public class ChatUI {
     private JFrame frame;
     private JTextField textField;
     private JTextArea messageArea;
-    
     private PrintWriter out;
     
     public ChatUI(PrintWriter writer){

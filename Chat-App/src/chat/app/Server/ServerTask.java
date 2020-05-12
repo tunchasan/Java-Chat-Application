@@ -48,7 +48,7 @@ public class ServerTask implements Runnable {
                                    if (ChatServer.GetNameList().contains(receiver)){
                                       String receiverName = receiver;
                                       
-                                      out.println(Messages.Results.Type_your_message.toString());
+                                      out.println("Type your message");
                                       
                                       while(true){
                                           String message = in.nextLine();
@@ -67,7 +67,7 @@ public class ServerTask implements Runnable {
                                       break;
                                       
                                     } else{
-                                       out.println(Messages.Results.User_not_exist.toString() + " Try again."); 
+                                       out.println("User not exist. Try again."); 
                                    }
                                }
                            }
@@ -77,7 +77,7 @@ public class ServerTask implements Runnable {
                                 out.println("Create a group for sending message to group");
                            }
                            else{
-                               out.println(Messages.Results.Type_your_message.toString());
+                               out.println("Type your message");
                                while (true) {
                                   // Get client request
                                     receiver = in.nextLine();
@@ -156,7 +156,7 @@ public class ServerTask implements Runnable {
                            }
                         }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
-                           out.println(Messages.Results.Type_your_message.toString());  
+                           out.println("Type your message");  
                            while(true){
                                // Get client request
                                receiver = in.nextLine();

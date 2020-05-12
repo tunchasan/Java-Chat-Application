@@ -2,8 +2,6 @@ package chat.app.DB;
 
 import chat.app.Server.ChatGroup;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Set;
 
 public class UserDataHandler {
     // The client name

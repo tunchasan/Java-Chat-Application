@@ -36,7 +36,7 @@ public class ChatServer {
         
         try (var listener = new ServerSocket(SERVER_PORT_NO)) {
             // Server starts message
-            System.out.println("The chat server is running...");
+            System.out.println("The chat server is running..");
             // Initialize the user data list
             userList = new ArrayList<UserDataHandler>();
             // Initialize name list
@@ -59,7 +59,7 @@ public class ChatServer {
                break;
             }
         }
-        return Messages.Results.Message_successfully_sended + " to " + userName;
+        return "Message successfuly sended to " + userName;
     }
     
     public static void SendMessageToGroup(String message, List<PrintWriter> groupWriter, String senderName){
@@ -75,6 +75,6 @@ public class ChatServer {
             }
             userList.get(i).GetWriter().println(senderName + ": " + message);
          }
-         return Messages.Results.Message_successfully_sended.toString();
+         return "Message successfuly sended.";
     }
 }

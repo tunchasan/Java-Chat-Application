@@ -1,7 +1,6 @@
 package chat.app.Client;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import static java.lang.System.exit;
 import java.net.Socket;
 import java.util.NoSuchElementException;
