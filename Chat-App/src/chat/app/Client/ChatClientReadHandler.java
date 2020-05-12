@@ -30,7 +30,7 @@ public class ChatClientReadHandler implements Runnable {
         } catch (NoSuchElementException e) { }
             finally {
                 chatUI.RemoveUI();
-                exit(1);
+                exit(0);
          }         
     }
 }
