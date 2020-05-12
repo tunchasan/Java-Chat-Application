@@ -25,14 +25,14 @@ public class ChatGroup {
     }
     
     public void SendMessageToGroup(String message, String userName){
-        ChatServer.SendMessageToGroup(message,groupWriters, userName);
+        ChatServer.SendMessageToGroup(message,groupWriters, userName, groupName);
     }
     
     public String GetGroupName(){
         return groupName;
     }
     
-   public void SettGroupName(String name){
+   public void SetGroupName(String name){
         groupName = name;     
     }
     

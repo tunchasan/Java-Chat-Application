@@ -169,6 +169,8 @@ public class ServerTask implements Runnable {
                                    break;
                                }
                            }
+                           ChatServer.SendMessageToAll(receiver , userName);
+                           
                            out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
                         }
                         else{

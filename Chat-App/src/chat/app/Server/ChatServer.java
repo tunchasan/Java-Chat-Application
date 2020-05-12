@@ -73,7 +73,7 @@ public class ChatServer {
             if (userList.get(i).GetName().equals(senderName) ){
                continue; 
             }
-            userList.get(i).GetWriter().println(senderName + ": " + message);
+            userList.get(i).GetWriter().println(ClientMessageFormatter(message, senderName));
          }
     }
     
