@@ -133,9 +133,14 @@ public class ServerTask implements Runnable {
                                              else if (ChatServer.GetNameList().contains(receiver)) {
                                                  for(UserDataHandler data:ChatServer.GetUserList()){
                                                      if (data.GetName().equals(receiver)){
-                                                         userData.GetGroup().AddUserToGroup(data.GetWriter());
-                                                         out.println(receiver + " added to group"); 
-                                                         break;
+                                                         if (data.GetName().equals(userName) == false) {
+                                                             userData.GetGroup().AddUserToGroup(data.GetWriter());
+                                                             out.println(receiver + " added to group"); 
+                                                             break;
+                                                         }
+                                                         else{
+                                                             out.println(ChatServer.ServerResponseFormatter("You are already a member of the group."));
+                                                         }
                                                      }
                                                  }
                                              }
