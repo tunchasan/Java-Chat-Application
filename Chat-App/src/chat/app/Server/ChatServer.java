@@ -70,9 +70,6 @@ public class ChatServer {
     
     public static void SendMessageToAll(String message, String senderName){
          for (int i = 0; i < userList.size(); i ++) {
-            if (userList.get(i).GetName().equals(senderName) ){
-               continue; 
-            }
             userList.get(i).GetWriter().println(ClientMessageFormatter(message, senderName));
          }
     }
