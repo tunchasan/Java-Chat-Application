@@ -33,6 +33,9 @@ public class ServerTask implements Runnable {
                         String receiver = in.nextLine();
                         // Client connection to end, if write and send "/quit" to server
                         if (receiver.toLowerCase().startsWith("/quit")) {
+                           // Remove user informations from server
+                           ChatServer.GetNameList().remove(userName);
+                           ChatServer.GetUserList().remove(userData);
                            return;
                         }
                         // if client's username didn't assing.
