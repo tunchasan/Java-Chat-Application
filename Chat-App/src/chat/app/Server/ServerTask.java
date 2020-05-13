@@ -36,6 +36,7 @@ public class ServerTask implements Runnable {
                            // Remove user informations from server
                            ChatServer.GetNameList().remove(userName);
                            ChatServer.GetUserList().remove(userData);
+                           // Group warns message
                            if (userData.GetGroup().GetGroupSize() > 0) {
                                userData.GetGroup().SendMessageToGroup(userName + " has left the group.", "");
                            }
