@@ -27,7 +27,7 @@ public class ChatGroup {
     public void SendMessageToGroup(String message, String userName){
         ChatServer.SendMessageToGroup(message,groupWriters, userName, groupName);
     }
-    
+
     public String GetGroupName(){
         return groupName;
     }

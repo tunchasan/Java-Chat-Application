@@ -8,7 +8,6 @@ package chat.app.Server;
 import chat.app.DB.UserDataHandler;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -83,6 +82,6 @@ public class ChatServer {
     }
     
     public static String ClientMessageFormatter(String message, String senderName) {
-        return " [" + ChatServer.GetServerTime() + " " + senderName + "] " +  message;
+        return " [" + ChatServer.GetServerTime() + " " + senderName + "]  " +  message;
     }
 }
