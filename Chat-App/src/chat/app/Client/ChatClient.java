@@ -15,10 +15,10 @@ public class ChatClient {
     public static void main(String[] args) throws Exception {
         
          System.out.println( "*******************************Server Command List******************************\n"
-                                 + "/createGroup -----> Create Group\n"
-                                 + "/singleUser  ------> Send message to a user\n"
-                                 + "/group ---------------> Send message to a group\n"
-                                 + "/allUser--------------> Send message to all user\n"
+                                 + "/createGroup -----------> Create Group\n"
+                                 + "/singleUser  -----------> Send message to a user\n"
+                                 + "/group + {Message} -----> Send message to a group\n"
+                                 + "/allUser + {Message} ---> Send message to all user\n"
                                  + "/quit ------------------> Close the connection to the server\n"
                                  + "********************************************************************************");
         

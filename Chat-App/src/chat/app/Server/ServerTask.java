@@ -1,7 +1,6 @@
 package chat.app.Server;
 
 import chat.app.DB.UserDataHandler;
-import static chat.app.Server.ChatServer.ServerResponseFormatter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -73,21 +72,17 @@ public class ServerTask implements Runnable {
                                }
                            }
                         }
-                        else if (receiver.equals("/group")){ // Message to a group Action
+                        else if (receiver.startsWith("/group")){ // Message to a group Action
                            if (userData.GetGroup().GetGroupSize() == 0){
                                 out.println(ChatServer.ServerResponseFormatter("Create a group for sending message to group"));
                            }
                            else{
-                               out.println(ChatServer.ServerResponseFormatter("Type your message"));
                                while (true) {
-                                  // Get client request
-                                    receiver = in.nextLine();
-
-                                    if (receiver.isBlank()){
+                                    if (receiver.substring(7).isBlank()){
                                         out.println(ChatServer.ServerResponseFormatter("Message can not be empty. Try again")); 
                                     }  
                                     else{
-                                        userData.GetGroup().SendMessageToGroup(receiver, userName);
+                                        userData.GetGroup().SendMessageToGroup(receiver.substring(7), userName);
                                         out.println(ChatServer.ServerResponseFormatter("Message sended successfuly.")); 
                                         break;
                                     }
@@ -157,19 +152,15 @@ public class ServerTask implements Runnable {
                            }
                         }
                         else if (receiver.startsWith("/allUser")){ // Message to all user Action
-                           out.println(ChatServer.ServerResponseFormatter("Type your message"));  
                            while(true){
-                               // Get client request
-                               receiver = in.nextLine();
-                               
-                               if(receiver.isBlank()){
+                               if(receiver.substring(9).isBlank()){
                                     out.println(ChatServer.ServerResponseFormatter("Message can not be empty. Try again."));
                                } 
                                else{
                                    break;
                                }
                            }
-                           ChatServer.SendMessageToAll(receiver , userName);
+                           ChatServer.SendMessageToAll(receiver.substring(9) , userName);
                            
                            out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
                         }
@@ -198,6 +189,8 @@ public class ServerTask implements Runnable {
                out.println(ChatServer.ServerResponseFormatter("Username can not be empty"));
             }
             else if (!(ChatServer.GetNameList().contains(name))){
+                // TODO
+                // If the username exist in database, load and print user informations
                 // Add name to names list in server
                 ChatServer.GetNameList().add(name);
                 //Create new data object to store user information
