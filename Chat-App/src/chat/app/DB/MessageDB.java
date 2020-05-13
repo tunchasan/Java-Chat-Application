@@ -12,5 +12,25 @@ public class MessageDB{
             this.time = Time;
             this.receiver = Receiver;
         }
+        
+        public String ToString() {
+            return sender + " " + message + " " + time + " " + receiver;
+        }
+        
+        public String getSender(){
+            return sender;
+        }
+        
+        public String getMessage(){
+            return message;
+        }
+        
+        public String getTime(){
+            return time;
+        }
+        
+        public String getReceiver(){
+            return receiver;
+        }
     }
     
