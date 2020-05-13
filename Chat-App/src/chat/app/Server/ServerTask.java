@@ -60,7 +60,7 @@ public class ServerTask implements Runnable {
                                               //Request to server to send message
                                               ChatServer.SendMesssageToPerson(message, receiverName, userName);
                                               // Send request result message to client
-                                              out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
+                                              //out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
                                               break;
                                           }
                                     }
@@ -83,7 +83,7 @@ public class ServerTask implements Runnable {
                                     }  
                                     else{
                                         userData.GetGroup().SendMessageToGroup(receiver.substring(7), userName);
-                                        out.println(ChatServer.ServerResponseFormatter("Message sended successfuly.")); 
+                                        //out.println(ChatServer.ServerResponseFormatter("Message sended successfuly.")); 
                                         break;
                                     }
                                }
@@ -162,7 +162,7 @@ public class ServerTask implements Runnable {
                            }
                            ChatServer.SendMessageToAll(receiver.substring(9) , userName);
                            
-                           out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
+                           //out.println(ChatServer.ServerResponseFormatter("Message successfuly sended."));
                         }
                         else{
                            out.println(ChatServer.ServerResponseFormatter("Wrong command. Try again!"));
