@@ -1,5 +1,7 @@
 package chat.app.Database;
 
+import chat.app.Models.User;
+import chat.app.Server.Server;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
@@ -69,6 +71,13 @@ public class DBManager {
         statement.executeUpdate();
     }
     
+    public static void InsertManyMessageList(String message, User user) throws SQLException {
+        for (User member : Server.getServerUserList()) {
+            InsertToMessageList( 
+                    new MessageDB(user.getName(), message, Server.getServerTime(), member.getName()));
+        }
+    }
+    
     public static boolean isUserExist(String username) throws SQLException {
         List<UserDB> userList = GetUserList();
         
@@ -79,5 +88,6 @@ public class DBManager {
              }
         return false;
         }
+    
     }
 

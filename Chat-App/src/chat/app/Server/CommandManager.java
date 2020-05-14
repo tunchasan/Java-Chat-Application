@@ -107,18 +107,18 @@ public class CommandManager {
         }
     }
 
-    public void command_allUser(String command) {
+    public void command_allUser(String command) throws SQLException {
        while(true) {
            if (command.substring(9).isBlank()) {
                MessageManager.messageSenderAsServer(user.getWriter(), "Message can not be empty. Try again");
            }
            else
                break;
-       }
+        }
        // Broadcast message
        MessageManager.sendBroadcastMessage(command.substring(9), user);
-       //TODO
        //Store message to db
+       DBManager.InsertManyMessageList(command.substring(9), user);
     }
     
     public void command_singleUser() throws SQLException {
