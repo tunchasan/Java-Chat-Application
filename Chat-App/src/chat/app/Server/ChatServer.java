@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package chat.app.Server;
 
-import chat.app.DB.UserDataHandler;
-import java.io.PrintWriter;
+import chat.app.Models.Group;
+import chat.app.Models.User;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,69 +14,78 @@ public class ChatServer {
     // Server port number
     private static int SERVER_PORT_NO = 4999;
     // Stores all user information seperately
-    private static List <UserDataHandler> userList;
+    private static List <User> userList;
     // All client names, so we can check for duplicates upon registration
-    private static List<String> names;
+    private static List<Group> groupList;
     
-    //Get server name list
-    public static List<String> GetNameList(){
-        return names;
+    //Get server group list
+    public static List<Group> getServerGroupList(){
+        return groupList;
+    }
+    //Get server userdata list
+    public static List<User> getServerUserList(){
+        return userList;
+    }
+    //Add group to groupList
+    public static void addServerGroupList(Group newGroup){
+        groupList.add(newGroup);
+    }
+    //Add user to userList
+    public static void addServerUserList(User newUser){
+        userList.add(newUser);
+    }
+    //Remove from group list
+    public static void removeFromGroupList(String groupName) {
+        for (Group group : groupList) {
+            if (group.getGroupName().equals(groupName)) {
+                groupList.remove(group);
+                return;
+            }
+        }
+    }
+    //Remove from user list
+    public static void removeFromUserList(User user) {
+        userList.remove(user);
+    }
+    //Controls whether user exist or not
+    public static User isUserExist(String userName) {
+        for (User user : userList) {
+            if (userName.equals(user.getName())){
+                return user;
+            }
+        }
+        return null;
+    }
+    //Controls whether group exist or not
+    public static Group isGroupExist(String groupName){
+        for (Group group : groupList) {
+            if (group.getGroupName().equals(groupName)){
+                return group;
+            }
+        }
+        return null;
     }
     
-    //Get server userdata list
-    public static List<UserDataHandler> GetUserList(){
-        return userList;
+    //Return servertime as string
+    public static String getServerTime(){
+        return LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
     }
     
     public static void main(String[] args) throws Exception{
-        
         try (var listener = new ServerSocket(SERVER_PORT_NO)) {
             // Server starts message
-            System.out.println(ServerResponseFormatter("The chat server is running.."));
+            String message = MessageManager.serverResponseFormatter("The chat server is running..");
+            System.out.println(message);
             // Initialize the user data list
-            userList = new ArrayList<UserDataHandler>();
+            userList = new ArrayList<User>();
             // Initialize name list
-            names = new ArrayList<String>();
+            groupList = new ArrayList<Group>();
             // Create new thread the pool
             var pool = Executors.newFixedThreadPool(SERVET_LIMIT);
 
             while (true) {
-                ServerTask task = new ServerTask(listener.accept()); 
-                pool.execute(task);
+                pool.execute(new ServerTask(listener.accept()));
             }
         }
-    }
-    
-    public static void SendMesssageToPerson(String message, String userName, String senderName){
-         for (int i = 0; i < userList.size(); i ++) {
-            if (userList.get(i).GetName().equals(userName)){
-               userList.get(i).GetWriter().println(ClientMessageFormatter(message, senderName));
-               break;
-            }
-        }
-    }
-    
-    public static void SendMessageToGroup(String message, List<PrintWriter> groupWriter, String senderName, String groupName){
-        for(PrintWriter writer:groupWriter){
-            writer.println(ClientMessageFormatter(message, "(Group " + groupName + ") "+ senderName));
-        }
-    }
-    
-    public static void SendMessageToAll(String message, String senderName){
-         for (int i = 0; i < userList.size(); i ++) {
-            userList.get(i).GetWriter().println(ClientMessageFormatter(message, senderName));
-         }
-    }
-    
-    public static String GetServerTime(){
-        return LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();
-    }
-    
-    public static String ServerResponseFormatter(String message){
-        return " [" + ChatServer.GetServerTime() + " Server]  " + message;
-    }
-    
-    public static String ClientMessageFormatter(String message, String senderName) {
-        return " [" + ChatServer.GetServerTime() + " " + senderName + "]  " +  message;
     }
 }
