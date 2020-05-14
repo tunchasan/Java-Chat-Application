@@ -1,5 +1,6 @@
 package chat.app.Database;
 
+import chat.app.Models.Group;
 import chat.app.Models.User;
 import chat.app.Server.Server;
 import com.mysql.jdbc.Connection;
@@ -61,6 +62,12 @@ public class DBManager {
         statement.executeUpdate();
     }
     
+    public static void InsertToGroupList(Group group) throws SQLException{
+        for(User user : group.getGroupUsers()) {
+            InsertToUserList(new UserDB(user.getName(), group.getGroupName()));
+        }
+    }
+    
     public static void InsertToMessageList(MessageDB object) throws SQLException{
         String sql = "INSERT INTO messagelist (sender, message, time, receiver) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = (PreparedStatement) con.prepareStatement(sql);
@@ -83,6 +90,17 @@ public class DBManager {
         
         for ( UserDB user : userList) {
             if (user.getUserName().equals(username)){
+                return true;
+                }
+             }
+        return false;
+        }
+    
+    public static boolean isGroupExist(String groupName) throws SQLException {
+        List<UserDB> userList = GetUserList();
+        
+        for ( UserDB user : userList) {
+            if (user.getGroupName().equals(groupName)){
                 return true;
                 }
              }
