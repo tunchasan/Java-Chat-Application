@@ -1,7 +1,10 @@
 package chat.app.Server;
 
-import chat.app.Models.Message;
+import chat.app.Database.DBManager;
+import chat.app.Database.MessageDB;
+import chat.app.Database.UserDB;
 import chat.app.Models.User;
+import java.sql.SQLException;
 import java.util.List;
 
 public class CommandManager {
@@ -45,7 +48,7 @@ public class CommandManager {
                 if (groupName.isBlank()) {
                     MessageManager.messageSenderAsServer(user.getWriter(), "Group name can not be empty. Try again.");
                 }
-                else if (ChatServer.isGroupExist(groupName) == null) {
+                else if (Server.isGroupExist(groupName) == null) {
                     //User group initializition
                     if (false) { //TODO 
                         // Control groupname in database whether that is exist or not
@@ -63,7 +66,7 @@ public class CommandManager {
                                 if (user.getGroup().getGroupUsers().size() > 0){
                                     user.getGroup().addUserToGroup(user);
                                     //Add new group to serverList
-                                    ChatServer.addServerGroupList(user.getGroup());
+                                    Server.addServerGroupList(user.getGroup());
                                     
                                     MessageManager.messageSenderAsServer(user.getWriter(), "Group created succesfully..");
                                     break;
@@ -77,8 +80,8 @@ public class CommandManager {
                                 MessageManager.messageSenderAsServer(user.getWriter(), "User name can not be empty. Try again.");
                             }
                             //if the member is exist
-                            else if (ChatServer.isUserExist(member) != null) {
-                                User memberUser = ChatServer.isUserExist(member);
+                            else if (Server.isUserExist(member) != null) {
+                                User memberUser = Server.isUserExist(member);
                                 if (memberUser.equals(user) == false) {
                                     user.getGroup().addUserToGroup(memberUser);
                                     MessageManager.messageSenderAsServer(user.getWriter(), member +  " added to group.");
@@ -116,7 +119,7 @@ public class CommandManager {
        MessageManager.sendBroadcastMessage(command.substring(9), user);
     }
     
-    public void command_singleUser() {
+    public void command_singleUser() throws SQLException {
         MessageManager.messageSenderAsServer(user.getWriter(),"Type receiver's user name"); 
          
         while(true) {
@@ -127,10 +130,10 @@ public class CommandManager {
             }
             else{
                 // if user is exist in server user list
-                if (ChatServer.isUserExist(receiverName) != null) {
+                if (Server.isUserExist(receiverName) != null) {
                     MessageManager.messageSenderAsServer(user.getWriter(),"Type your message"); 
                     // get receiver's object
-                    User receiverUser = ChatServer.isUserExist(receiverName);
+                    User receiverUser = Server.isUserExist(receiverName);
                     while(true) {
                         String message = user.getReader().nextLine();
                         
@@ -140,7 +143,9 @@ public class CommandManager {
                         else {
                             //Request to server to send message
                             MessageManager.sendPrivateMessage(message, receiverUser, user);
-                            
+                            DBManager.InsertToMessageList(
+                                    new MessageDB(
+                                            user.getName(), message, Server.getServerTime().toString(), receiverUser.getName()));
                             break;
                         }
                     }
@@ -160,35 +165,50 @@ public class CommandManager {
     
     public void command_quit() {
         //Remove user informations from server
-        ChatServer.removeFromUserList(user);
+        Server.removeFromUserList(user);
         // If user has a groups
         if (user.getGroup().getGroupUsers().size() > 0) {
             // Just remove user information from group. We will add the user on next login
             user.getGroup().removeUserFromGroup(user);
             // if no one is available in the group, we remove the group information from server. But we already saved it in database.
             if (user.getGroup().getGroupUsers().size()  == 0) {
-                ChatServer.removeFromGroupList(user.getGroup().getGroupName());
+                Server.removeFromGroupList(user.getGroup().getGroupName());
             }
         }
         MessageManager.sendGroupMessage(user.getName() + " just went offline.", user);
     }
     
-    public void command_assingName() {
-        MessageManager.messageSenderAsServer(user.getWriter(),  "Type a username");
+    public void command_assingName() throws SQLException {
+        MessageManager.messageSenderAsServer(user.getWriter(),  "Create a new username or type existing one");
         while(true) {
             String name = user.getReader().nextLine();
-            if (name.isBlank()){
+            if (name.isBlank()) {
                MessageManager.messageSenderAsServer(user.getWriter(), "Username can not be empty. Try again");
             }
-            else if (ChatServer.isUserExist(name) == null){
-                // TODO
-                // If the username exist in database, load and print user informations
+            else if (Server.isUserExist(name) == null){
                 // Assing unique name to user' name
                 user.updateName(name);
                 // Add new user to user list in server
-                ChatServer.addServerUserList(user);
-                // Sends return message to client
-                MessageManager.messageSenderAsServer(user.getWriter(), "Connected Server as " + user.getName());
+                Server.addServerUserList(user);
+                // If the username exist in database, load and print user informations
+                if (DBManager.isUserExist(name)) {
+                    //get user message data from database
+                    // Sends return message to client
+                    MessageManager.messageSenderAsServer(user.getWriter(), "Welcome back " + user.getName());
+                    // Retrieve messages from database and print it
+                    for (MessageDB message : DBManager.GetMessageList()) {
+                        // if receiver is current user
+                        if (message.getReceiver().equals(name)) {
+                            MessageManager.sendLoadedMessages(message.getMessage(), user, message.getSender(), message.getTime());
+                        }
+                    }
+                }
+                else {
+                    // Sends return message to client
+                    MessageManager.messageSenderAsServer(user.getWriter(), "Connected Server as " + user.getName());
+                    // Save user to db
+                    DBManager.InsertToUserList(new UserDB(name, ""));
+                }
                 //Then finalize the process
                 return;
             }
