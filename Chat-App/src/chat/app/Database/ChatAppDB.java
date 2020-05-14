@@ -1,6 +1,6 @@
+package chat.app.Database;
 
-package chat.app.DB;
-
+import chat.app.Models.Message;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
@@ -38,15 +38,15 @@ public class ChatAppDB {
         return resultList;
     }
     
-     public List<MessageDB> GetMessageList() throws SQLException{
+     public List<Message> GetMessageList() throws SQLException{
         String sql = "SELECT * FROM messageList";
         Statement statement = (Statement) con.createStatement();
         ResultSet result = statement.executeQuery(sql);
         
-        List<MessageDB> resultList = new ArrayList<MessageDB>();
+        List<Message> resultList = new ArrayList<Message>();
         
         while(result.next()) {
-            resultList.add(new MessageDB(result.getString(1), result.getString(2), result.getString(3), result.getString(4)));
+            resultList.add(new Message(result.getString(1), result.getString(2), result.getString(3), result.getString(4)));
         }
 
         return resultList;
@@ -59,7 +59,7 @@ public class ChatAppDB {
         statement.executeUpdate();
     }
     
-    public void InsertToMessageList(MessageDB object) throws SQLException{
+    public void InsertToMessageList(Message object) throws SQLException{
         String sql = "INSERT INTO messagelist (sender, message, time, receiver) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = (PreparedStatement) con.prepareStatement(sql);
         statement.setString(1, object.getSender());
@@ -72,11 +72,11 @@ public class ChatAppDB {
     public static void main(String[] args) throws SQLException{
         ChatAppDB chat = new ChatAppDB();
         
-        List<MessageDB> resultList = chat.GetMessageList();
-        MessageDB sa = new MessageDB("ADSD","DSA","DASAS","DSA");
+        List<Message> resultList = chat.GetMessageList();
+        Message sa = new Message("ADSD","DSA","DASAS","DSA");
         chat.InsertToUserList("HasanD");
         chat.InsertToMessageList(sa);
-        for(MessageDB x : resultList){
+        for(Message x : resultList){
             System.out.println(x.ToString());
         }
     }
