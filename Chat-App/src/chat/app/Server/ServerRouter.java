@@ -1,6 +1,7 @@
 package chat.app.Server;
 
 import chat.app.Models.User;
+import java.sql.SQLException;
 
 public class ServerRouter {    
     
@@ -11,7 +12,7 @@ public class ServerRouter {
          System.out.println(user.getSocket().toString() + " fasfsa");
     }
 
-    public boolean Route(String command) {
+    public boolean Route(String command) throws SQLException {
         if (command.replaceAll(" ", "").equals("/quit")) {
             executer.command_quit();
             return false;
