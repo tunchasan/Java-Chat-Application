@@ -117,6 +117,8 @@ public class CommandManager {
        }
        // Broadcast message
        MessageManager.sendBroadcastMessage(command.substring(9), user);
+       //TODO
+       //Store message to db
     }
     
     public void command_singleUser() throws SQLException {
@@ -130,7 +132,7 @@ public class CommandManager {
             }
             else{
                 // if user is exist in server user list
-                if (Server.isUserExist(receiverName) != null) {
+                if (Server.isUserExist(receiverName) != null || DBManager.isUserExist(receiverName)) {
                     MessageManager.messageSenderAsServer(user.getWriter(),"Type your message"); 
                     // get receiver's object
                     User receiverUser = Server.isUserExist(receiverName);
@@ -141,19 +143,21 @@ public class CommandManager {
                              MessageManager.messageSenderAsServer(user.getWriter(),"Message can not be empty. Try again."); 
                         }
                         else {
-                            //Request to server to send message
-                            MessageManager.sendPrivateMessage(message, receiverUser, user);
+                            if (Server.isUserExist(receiverName) != null) {
+                                //Request to server to send message
+                                MessageManager.sendPrivateMessage(message, receiverUser, user);
+                                MessageManager.messageSenderAsServer(user.getWriter(),"Message sended to " + receiverUser.getName());
+                            }
+                            else
+                                MessageManager.messageSenderAsServer(user.getWriter(),"User is offline. The message will be shown when the user is online.");
+                            // Store message to db
                             DBManager.InsertToMessageList(
                                     new MessageDB(
-                                            user.getName(), message, Server.getServerTime().toString(), receiverUser.getName()));
+                                            user.getName(), message, Server.getServerTime().toString(), receiverName));
                             break;
                         }
                     }
                     break;
-                }
-                // If the receiver does not exist in server user list but exist in database
-                else if (false){
-                    //TODO
                 }
                 // If the receiver does not exist nor database and server user list
                 else{
@@ -206,7 +210,7 @@ public class CommandManager {
                 else {
                     // Sends return message to client
                     MessageManager.messageSenderAsServer(user.getWriter(), "Connected Server as " + user.getName());
-                    // Save user to db
+                    // // Store user to db
                     DBManager.InsertToUserList(new UserDB(name, ""));
                 }
                 //Then finalize the process
