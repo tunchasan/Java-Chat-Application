@@ -1,12 +1,9 @@
-
 package chat.app.Client;
 
-import java.io.IOException;
+import chat.app.Views.ChatUI;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.Executors;
 
 public class ChatClient {
     

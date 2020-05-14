@@ -1,5 +1,6 @@
 package chat.app.Client;
 
+import chat.app.Views.ChatUI;
 import java.io.IOException;
 import static java.lang.System.exit;
 import java.net.Socket;
