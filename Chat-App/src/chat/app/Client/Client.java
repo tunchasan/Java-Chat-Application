@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ChatClient {
+public class Client {
     
     private static int SERVER_PORT_NO = 4999;
     
@@ -28,7 +28,7 @@ public class ChatClient {
             // Create new UI for new user
             ChatUI chatUI = new ChatUI(out);
             // Create an object for handling client read actions in thread
-            ChatClientReadHandler conn = new ChatClientReadHandler(socket, chatUI);
+            ClientListener conn = new ClientListener(socket, chatUI);
             // Start the thread
             new Thread(conn).start();
             

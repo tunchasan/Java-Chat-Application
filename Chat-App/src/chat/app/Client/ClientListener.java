@@ -7,13 +7,13 @@ import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class ChatClientReadHandler implements Runnable {
+public class ClientListener implements Runnable {
     
     private Socket socket;
     private Scanner in;
     private ChatUI chatUI;
             
-    public ChatClientReadHandler(Socket socket, ChatUI chatUI) throws IOException{
+    public ClientListener(Socket socket, ChatUI chatUI) throws IOException{
         this.socket = socket;
         in = new Scanner(this.socket.getInputStream());
         this.chatUI = chatUI;

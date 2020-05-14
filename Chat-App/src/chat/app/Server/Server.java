@@ -1,5 +1,6 @@
 package chat.app.Server;
 
+import chat.app.Database.DBManager;
 import chat.app.Models.Group;
 import chat.app.Models.User;
 import java.net.ServerSocket;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.time.LocalDateTime;
 
-public class ChatServer {
+public class Server {
     // Server client capacity
     private static int SERVET_LIMIT = 20;
     // Server port number
@@ -82,9 +83,11 @@ public class ChatServer {
             groupList = new ArrayList<Group>();
             // Create new thread the pool
             var pool = Executors.newFixedThreadPool(SERVET_LIMIT);
+            //Connect the DB
+            DBManager.ConnectDB();
 
             while (true) {
-                pool.execute(new ServerTask(listener.accept()));
+                pool.execute(new ClientHandler(listener.accept()));
             }
         }
     }

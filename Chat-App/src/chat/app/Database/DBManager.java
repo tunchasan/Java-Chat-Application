@@ -1,6 +1,5 @@
 package chat.app.Database;
 
-import chat.app.Models.Message;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
@@ -10,11 +9,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatAppDB {
+public class DBManager {
 
-    private Connection con;
+    private static Connection con;
     
-    public ChatAppDB() {
+    public static void ConnectDB() {
         //Connect database
         try{  
                 Class.forName("com.mysql.jdbc.Driver");  
@@ -24,42 +23,43 @@ public class ChatAppDB {
                 } catch(ClassNotFoundException | SQLException e) { System.out.println(e);}  
          } 
 
-    public List<String> GetUserList() throws SQLException{
+    public static List<UserDB> GetUserList() throws SQLException{
         String sql = "SELECT * FROM userlist";
         Statement statement = (Statement) con.createStatement();
         ResultSet result = statement.executeQuery(sql);
         
-        List<String> resultList = new ArrayList<String>();
+        List<UserDB> resultList = new ArrayList<UserDB>();
         
         while(result.next()) {
-            resultList.add(result.getString(1));
+            resultList.add(new UserDB(result.getString(1), result.getString(2)));
         }
 
         return resultList;
     }
     
-     public List<Message> GetMessageList() throws SQLException{
+     public static List<MessageDB> GetMessageList() throws SQLException{
         String sql = "SELECT * FROM messageList";
         Statement statement = (Statement) con.createStatement();
         ResultSet result = statement.executeQuery(sql);
         
-        List<Message> resultList = new ArrayList<Message>();
+        List<MessageDB> resultList = new ArrayList<MessageDB>();
         
         while(result.next()) {
-            resultList.add(new Message(result.getString(1), result.getString(2), result.getString(3), result.getString(4)));
+            resultList.add(new MessageDB(result.getString(1), result.getString(2), result.getString(3), result.getString(4)));
         }
 
         return resultList;
     }
     
-    public void InsertToUserList(String object) throws SQLException{
-        String sql = "INSERT INTO userlist (username) VALUES (?)";
+    public static void InsertToUserList(UserDB user) throws SQLException{
+        String sql = "INSERT INTO userlist (username, groupname) VALUES (?, ?)";
         PreparedStatement statement = (PreparedStatement) con.prepareStatement(sql);
-        statement.setString(1, object);
+        statement.setString(1, user.getUserName());
+        statement.setString(2, user.getGroupName());
         statement.executeUpdate();
     }
     
-    public void InsertToMessageList(Message object) throws SQLException{
+    public static void InsertToMessageList(MessageDB object) throws SQLException{
         String sql = "INSERT INTO messagelist (sender, message, time, receiver) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = (PreparedStatement) con.prepareStatement(sql);
         statement.setString(1, object.getSender());
@@ -69,16 +69,15 @@ public class ChatAppDB {
         statement.executeUpdate();
     }
     
-    public static void main(String[] args) throws SQLException{
-        ChatAppDB chat = new ChatAppDB();
+    public static boolean isUserExist(String username) throws SQLException {
+        List<UserDB> userList = GetUserList();
         
-        List<Message> resultList = chat.GetMessageList();
-        Message sa = new Message("ADSD","DSA","DASAS","DSA");
-        chat.InsertToUserList("HasanD");
-        chat.InsertToMessageList(sa);
-        for(Message x : resultList){
-            System.out.println(x.ToString());
+        for ( UserDB user : userList) {
+            if (user.getUserName().equals(username)){
+                return true;
+                }
+             }
+        return false;
         }
-    }
     }
 

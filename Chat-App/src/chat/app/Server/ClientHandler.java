@@ -1,17 +1,17 @@
 package chat.app.Server;
 
-import chat.app.Models.Message;
+import chat.app.Database.MessageDB;
 import chat.app.Models.User;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ServerTask implements Runnable {
+public class ClientHandler implements Runnable {
     
     private User user;
     // Handles all commands redirection
     private ServerRouter router;
     
-    ServerTask(Socket socket) throws IOException {
+    ClientHandler(Socket socket) throws IOException {
         // Initialize user socket
         this.user = new User(socket);
         // Initialize server router
