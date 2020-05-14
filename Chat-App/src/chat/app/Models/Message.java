@@ -1,12 +1,14 @@
-package chat.app.DB;
+package chat.app.Models;
 
-public class MessageDB{
+import chat.app.Server.ChatServer;
+
+public class Message{
         private String sender;
         private String message;
         private String time;
         private String receiver;
         
-        public MessageDB(String Sender, String Message, String Time, String Receiver){
+        public Message(String Sender, String Message, String Time, String Receiver){
             this.sender = Sender;
             this.message = Message;
             this.time = Time;
