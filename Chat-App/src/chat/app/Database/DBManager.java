@@ -34,13 +34,13 @@ public class DBManager {
         List<UserDB> resultList = new ArrayList<UserDB>();
         
         while(result.next()) {
-            resultList.add(new UserDB(result.getString(1), result.getString(2)));
+            resultList.add(new UserDB(result.getString(1), ""));
         }
 
         return resultList;
     }
-    
-     public static List<MessageDB> GetMessageList() throws SQLException{
+
+    public static List<MessageDB> GetMessageList() throws SQLException{
         String sql = "SELECT * FROM messageList";
         Statement statement = (Statement) con.createStatement();
         ResultSet result = statement.executeQuery(sql);
@@ -55,19 +55,12 @@ public class DBManager {
     }
     
     public static void InsertToUserList(UserDB user) throws SQLException{
-        String sql = "INSERT INTO userlist (username, groupname) VALUES (?, ?)";
+        String sql = "INSERT INTO userlist (username) VALUES (?)";
         PreparedStatement statement = (PreparedStatement) con.prepareStatement(sql);
         statement.setString(1, user.getUserName());
-        statement.setString(2, user.getGroupName());
         statement.executeUpdate();
     }
-    
-    public static void InsertToGroupList(Group group) throws SQLException{
-        for(User user : group.getGroupUsers()) {
-            InsertToUserList(new UserDB(user.getName(), group.getGroupName()));
-        }
-    }
-    
+
     public static void InsertToMessageList(MessageDB object) throws SQLException{
         String sql = "INSERT INTO messagelist (sender, message, time, receiver) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = (PreparedStatement) con.prepareStatement(sql);
@@ -78,10 +71,17 @@ public class DBManager {
         statement.executeUpdate();
     }
     
-    public static void InsertManyMessageList(String message, User user) throws SQLException {
+    public static void InsertManyMessageList(String message, String senderName) throws SQLException {
         for (User member : Server.getServerUserList()) {
             InsertToMessageList( 
-                    new MessageDB(user.getName(), message, Server.getServerTime(), member.getName()));
+                    new MessageDB(senderName, message, Server.getServerTime(), member.getName()));
+        }
+    }
+    
+    public static void InsertGroupMessageList(String message, String senderName, Group group) throws SQLException {
+        for (User member : group.getGroupUsers()) {
+            InsertToMessageList( 
+                    new MessageDB(senderName, message, Server.getServerTime(), member.getName()));
         }
     }
     
@@ -90,17 +90,6 @@ public class DBManager {
         
         for ( UserDB user : userList) {
             if (user.getUserName().equals(username)){
-                return true;
-                }
-             }
-        return false;
-        }
-    
-    public static boolean isGroupExist(String groupName) throws SQLException {
-        List<UserDB> userList = GetUserList();
-        
-        for ( UserDB user : userList) {
-            if (user.getGroupName().equals(groupName)){
                 return true;
                 }
              }

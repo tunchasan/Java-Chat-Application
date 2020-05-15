@@ -15,7 +15,7 @@ public class CommandManager {
         this.user = user;
     }
     
-    public void command_group(String command) {
+    public void command_group(String command) throws SQLException {
         if (user.getGroup().getGroupUsers().size() == 0) {
              MessageManager.messageSenderAsServer(user.getWriter(), "Create a group for sending message to group");
         }
@@ -32,13 +32,16 @@ public class CommandManager {
                 else {
                     // Send group message to group members
                     MessageManager.sendGroupMessage(command.substring(7), user);
+                    //Store message to db
+                    System.out.println("(Group" + user.getGroup().getGroupName() + ") " + user.getName() + " : " + command.substring(7));
+                    DBManager.InsertGroupMessageList(command.substring(7), "(Group " + user.getGroup().getGroupName() + ") " + user.getName(), user.getGroup());
                     break;
                 }
             }
         }
     }
     
-    public void command_createGroup() {
+    public void command_createGroup() throws SQLException {
         if (user.getGroup().getGroupUsers().size() == 0) {
             MessageManager.messageSenderAsServer(user.getWriter(), "Type group name");
             
@@ -49,11 +52,6 @@ public class CommandManager {
                     MessageManager.messageSenderAsServer(user.getWriter(), "Group name can not be empty. Try again.");
                 }
                 else if (Server.isGroupExist(groupName) == null) {
-                    //User group initializition
-                    if (false) { //TODO 
-                        // Control groupname in database whether that is exist or not
-                    }
-                    else{
                         // User group initializition
                         user.getGroup().createGroup(groupName);
                         
@@ -95,7 +93,6 @@ public class CommandManager {
                             }
                         }
                         break;
-                    }
                 } 
                 else {
                     MessageManager.messageSenderAsServer(user.getWriter(), "Group name is using by others. Try again..");
@@ -118,7 +115,7 @@ public class CommandManager {
        // Broadcast message
        MessageManager.sendBroadcastMessage(command.substring(9), user);
        //Store message to db
-       DBManager.InsertManyMessageList(command.substring(9), user);
+       DBManager.InsertManyMessageList(command.substring(9), user.getName());
     }
     
     public void command_singleUser() throws SQLException {
@@ -179,7 +176,7 @@ public class CommandManager {
                 Server.removeFromGroupList(user.getGroup().getGroupName());
             }
         }
-        MessageManager.sendGroupMessage(user.getName() + " just went offline.", user);
+        MessageManager.sendGroupMessage(user.getName() + " left to group.", user);
     }
     
     public void command_assingName() throws SQLException {
