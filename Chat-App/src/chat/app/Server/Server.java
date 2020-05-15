@@ -66,7 +66,6 @@ public class Server {
         }
         return null;
     }
-    
     //Return servertime as string
     public static String getServerTime(){
         return LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute();

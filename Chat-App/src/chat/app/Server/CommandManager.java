@@ -5,7 +5,6 @@ import chat.app.Database.MessageDB;
 import chat.app.Database.UserDB;
 import chat.app.Models.User;
 import java.sql.SQLException;
-import java.util.List;
 
 public class CommandManager {
     
@@ -180,7 +179,7 @@ public class CommandManager {
     }
     
     public void command_assingName() throws SQLException {
-        MessageManager.messageSenderAsServer(user.getWriter(),  "Create a new username or type existing one");
+        MessageManager.messageSenderAsServer(user.getWriter(),  "Type a new username or type existing one");
         while(true) {
             String name = user.getReader().nextLine();
             if (name.isBlank()) {
