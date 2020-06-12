@@ -10,3 +10,4 @@ This is a chat application that's built with Java Socket Programming based on TC
 * Allows to add users to group
 * Message storage in MYSQL DB.
 * Thread usage for each client.
+* Simple message interface with Java Swing
